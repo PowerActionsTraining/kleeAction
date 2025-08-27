@@ -42,7 +42,7 @@ jobs:
         uses: docker://exozet/jq:1.6-r0
         if: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status == 'success' }}
         run: |
-          echo "BUILD_NUMBER: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).BUILD_NUMBER }}"
-          echo "TESTVAR: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status }}"
+          echo "BUILD_NUMBER: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).BUILD_ID }}"
+          echo "Status: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status }}"
 
 
