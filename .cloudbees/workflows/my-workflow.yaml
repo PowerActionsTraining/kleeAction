@@ -32,10 +32,10 @@ jobs:
         name: Run Jenkins job with output
         uses: https://github.com/cloudbees-io/jenkins-run-job@v2
         with:
-          url: ${{ vars.JENKINS_URL }}
-          username: ${{ secrets.JENKINS_USERNAME }}
-          token: ${{ secrets.JENKINS_TOKEN }}
-          job-name: jenkins_job_with_output_name
+          url: https://sda.preview.cb-demos.io/westest/
+          username: ${{ secrets.WES_JENKINS_USERNAME }}
+          token: ${{ secrets.WES_JENKINS_TOKEN }}
+          job-name: WesTestJob2
 
       - id: expose-output
         name: Expose Jenkins job output
