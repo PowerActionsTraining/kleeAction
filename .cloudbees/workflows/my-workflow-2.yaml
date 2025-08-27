@@ -10,7 +10,7 @@ on:
         required: true
       pathtooutput:
         type: string
-        default: example.txt
+        default: example.7z
         required: true
       artifactversion:
         type: string
