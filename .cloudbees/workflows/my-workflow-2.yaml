@@ -29,5 +29,5 @@ jobs:
         uses: docker://crazymax/7zip:latest
         shell: sh
         run: |
-          7z a ${{inputs.pathtobinary}} ${{inputs.pathtobinary}}
-          ls ${{inputs.pathtobinary}}
+          7z a ${{inputs.pathtooutput}} ${{inputs.pathtobinary}}
+          ls ${{inputs.pathtooutput}}
