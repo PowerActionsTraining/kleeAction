@@ -1,21 +1,23 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: My workflow
-inputs:
-  pathtobinary:  
-    description: 'Path to binary'
-    required: true
     
 on:
-  push:
-    branches:
-      - '**'
+  workflow_dispatch:
+    inputs:
+      pathtobinary:
+        type: string
+        default: example.txt
+        required: true
 
 jobs:
   build:
+    outputs:
+      jenkins_output:
     steps:
       - name: Say hello
         uses: docker://golang:1.20.3-alpine3.17
         shell: sh
         run: |
-          echo "hello world"
+          echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
+          echo ${{inputs.pathtobinary}} > ${{inputs.jenkins_output}}
