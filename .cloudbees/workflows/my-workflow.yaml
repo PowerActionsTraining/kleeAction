@@ -40,8 +40,9 @@ jobs:
       - id: expose-output
         name: Expose Jenkins job output
         uses: docker://exozet/jq:1.6-r0
-        if: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).STATUS != 'SUCCESS' }}
+        if: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).result != 'SUCCESS' }}
         run: |
-          echo "Status: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).STATUS }}"
+          echo "Status: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).result }}"
+           echo "Status: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).number }}"
 
 
