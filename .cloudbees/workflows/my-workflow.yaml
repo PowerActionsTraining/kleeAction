@@ -11,18 +11,11 @@ on:
         required: true
 
 jobs:
-  build:
-    outputs:
-      jenkins_output:
-        type: string
-        default: example2.txt
-        required: true
-        
+  build:        
     steps:
       - name: Say hello
         uses: docker://golang:1.20.3-alpine3.17
         shell: sh
         run: |
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
-          echo "This is an example file - $(date)" > ${{outputs.jenkins_output}}
 
