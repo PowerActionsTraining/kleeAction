@@ -24,5 +24,6 @@ jobs:
         shell: sh
         run: |
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
-          echo ${{inputs.pathtobinary}} 
+          cat ${{inputs.pathtobinary}} 
+          cat ${{outputs.outfile}}
 
