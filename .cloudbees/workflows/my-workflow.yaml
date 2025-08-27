@@ -1,6 +1,12 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: My workflow
+inputs:
+      pathtobinary:  
+      description: 'Path to binary'
+      required: true
+outputs:
+      jenkins_output: ${{inputs.pathtobinary}}
 
 on:
   push:
@@ -9,16 +15,15 @@ on:
 
 jobs:
   Run_Main_Job:
-    inputs:
-      pathtobinary:  
-      description: 'Path to binary'
-      required: true
-    outputs:
-      jenkins_output: ${{inputs.pathtobinary}}
     steps:
       - name: Create file
         id: step3
         uses: docker://curlimages/curl:latest
         shell: sh
         run: echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
+      - name: Print file
+        id: step3
+        uses: docker://curlimages/curl:latest
+        shell: sh
+        run: echo ${{outputs.jenkins_output}}
 
