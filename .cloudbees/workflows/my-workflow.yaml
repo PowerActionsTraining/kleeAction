@@ -15,10 +15,8 @@ on:
 jobs:
   build:
     outputs:
-      outfile:
-        type: string
-        default: example2.txt
-        required: true
+      outfile: ${{inputs.pathtobinary}}
+
     steps:
       - name: Create file
         id: step1
@@ -26,6 +24,5 @@ jobs:
         shell: sh
         run: |
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
-          echo ${{inputs.pathtobinary}} > ${{inputs.pathtobinary}} 
           echo ${{inputs.pathtobinary}} 
 
