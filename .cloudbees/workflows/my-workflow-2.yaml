@@ -18,12 +18,15 @@ jobs:
   build:
     steps:
       - name: Create file
-        id: step3
+        id: step1
         uses: docker://curlimages/curl:latest
         shell: sh
-        run: echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
+        run: |
+          echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
+          cat ${{inputs.pathtobinary}}
       - name: create and zip file
-        uses: docker://crazymax/7zip
+        id: step2
+        uses: docker://crazymax/7zip:latest
         shell: sh
         run: |
           7z a ${{inputs.pathtobinary}} ${{inputs.pathtobinary}}
