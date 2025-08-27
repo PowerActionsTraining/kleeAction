@@ -26,5 +26,10 @@ jobs:
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
           echo ${{inputs.pathtobinary}} 
           cat ${{inputs.pathtobinary}}
+      - name: Print file
+        id: step2
+        uses: docker://curlimages/curl:latest
+        shell: sh
+        run: |
           cat ${{outputs.outfile}}
 
