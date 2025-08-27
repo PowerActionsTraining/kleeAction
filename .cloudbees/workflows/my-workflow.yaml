@@ -40,18 +40,9 @@ jobs:
       - id: expose-output
         name: Expose Jenkins job output
         uses: docker://exozet/jq:1.6-r0
-        if: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).TESTVAR != '19' }}
+        if: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status == 'success' }}
         run: |
           echo "BUILD_NUMBER: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).BUILD_NUMBER }}"
           echo "TESTVAR: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status }}"
 
-  Print-Jenkins-Outputs:
-    if: ${{ fromJSON(needs.Jenkins-Output-Job.outputs.jenkins_output).status == 'success' }}
-    needs: [Jenkins-Output-Job]
-    steps:
-      - id: print-jenkins-output
-        uses: docker://exozet/jq:1.6-r0
-        name: Print Jenkins-Output-Job outputs
-        run: |
-          echo "BUILD_NUMBER: ${{ fromJSON(needs.Jenkins-Output-Job.outputs.jenkins_output).BUILD_NUMBER }}"
 
