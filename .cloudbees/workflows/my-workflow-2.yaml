@@ -1,7 +1,4 @@
-apiVersion: automation.cloudbees.io/v1alpha1
-kind: workflow
-name: My workflow
-
+Name: Create Zip Upload and Register Zip File
 on:
   workflow_dispatch:
     inputs:
@@ -12,22 +9,60 @@ on:
       pathtooutput:
         type: string
         default: example.7z
-        required: true    
-
+        required: true
+      artifactversion:
+        type: string
+        default: 1.0.0
+        required: true
 jobs:
   build:
+    env:
+      NEXUS_USERNAME: ${{vars.nexus_training_actions_user}}
+      NEXUS_PASSWORD: ${{secrets.nexus_training_actions_secret}}
+      NEXUS_REPO: ${{vars.nexus_training_actions_repo}}
     steps:
-      - name: Create file
+      - name: Print vars
         id: step1
         uses: docker://curlimages/curl:latest
         shell: sh
         run: |
-          echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
-          cat ${{inputs.pathtobinary}}
+          echo  $NEXUS_USERNAME - $NEXUS_PASSWORD - $NEXUS_REPO
+      - name: Create file
+        id: step3
+        uses: docker://curlimages/curl:latest
+        shell: sh
+        run: echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
       - name: create and zip file
-        id: step2
+        id: step31
         uses: docker://crazymax/7zip:latest
         shell: sh
         run: |
           7z a ${{inputs.pathtooutput}} ${{inputs.pathtobinary}}
           ls ${{inputs.pathtooutput}}
+      - name: Upload to Nexus
+        id: step4
+        uses: docker://curlimages/curl:latest
+        shell: sh
+        run: |
+          curl -v -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file ${{inputs.pathtooutput}} $NEXUS_REPO
+      - name: List artifacts in repo
+        id: step5
+        uses: docker://curlimages/curl:latest
+        shell: sh
+        run: |
+          curl -s -u $NEXUS_USERNAME:$NEXUS_PASSWORD \
+             "https://nexus.cloudbees.guru:8081/service/rest/v1/search?repository=unify-docker-training" \
+      - name: Get artifact digest
+        id: step6
+        uses: docker://ganeshpl/alpine-jq
+        shell: sh
+        run: |
+          echo -n "$(echo "$NEXUS_PASSWORD" | curl -s -u "$NEXUS_USERNAME" 'https://nexus.cloudbees.guru:8081/service/rest/v1/assets?repository=unify-docker-training' | jq -r '.items[] | select(.path == ${{inputs.pathtooutput}}") | .checksum.md5')" > $CLOUDBEES_OUTPUTS/digest
+      - name: Register built artifact
+        id: step7
+        uses: cloudbees-io/register-build-artifact@v1
+        with:
+          version: ${{inputs.artifactversion}}
+          url: ${{vars.nexus_training_actions_repo}}${{inputs.pathtooutput}}
+          digest: ${{steps.step6.outputs.digest}}
+          name: ${{inputs.pathtooutput}}
