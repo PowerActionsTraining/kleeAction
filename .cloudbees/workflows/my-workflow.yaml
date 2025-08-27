@@ -14,9 +14,18 @@ on:
         required: true
 jobs:
   build:
+    outputs:
+      outfile:
+        type: string
+        default: example2.txt
+        required: true
     steps:
       - name: Create file
         id: step1
         uses: docker://curlimages/curl:latest
         shell: sh
-        run: echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
+        run: |
+          echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
+          echo ${{inputs.pathtobinary}} > ${{inputs.pathtobinary}} 
+          echo ${{inputs.pathtobinary}} 
+
