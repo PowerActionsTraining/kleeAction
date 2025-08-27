@@ -8,10 +8,6 @@ on:
         type: string
         default: example.txt
         required: true
-      pathtooutput:
-        type: string
-        default: example.7z
-        required: true
       artifactversion:
         type: string
         default: 1.0.0
@@ -27,7 +23,6 @@ jobs:
         uses: PowerActionsTraining/kleeAction@main
         with:
           pathtobinary: ${{inputs.pathtobinary}}
-          pathtooutput: ${{inputs.pathtooutput}}
           artifactversion: ${{inputs.artifactversion}}
           username: ${{vars.nexus_training_actions_user}}
           password: ${{secrets.nexus_training_actions_secret}}
