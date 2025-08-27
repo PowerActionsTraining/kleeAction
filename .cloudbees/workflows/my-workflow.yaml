@@ -6,8 +6,8 @@ inputs:
   description: 'Path to binary'
   required: true
 outputs:
-  jenkins_output: ${{inputs.pathtobinary}}
-
+  jenkins_output:
+    
 on:
   push:
     branches:
