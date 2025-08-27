@@ -13,8 +13,6 @@ inputs:
     
 jobs:
   Run_Main_Job:
-    outputs:
-      jenkins_output:
     steps:
       - name: Create file
         id: step3
@@ -23,10 +21,5 @@ jobs:
         run: |
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
           echo ${{inputs.pathtobinary}} > ${{outputs.jenkins_output}}
-          
-      - name: Print file
-        id: step3
-        uses: docker://curlimages/curl:latest
-        shell: sh
-        run: echo ${{outputs.jenkins_output}}
+
 
