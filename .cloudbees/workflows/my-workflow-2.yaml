@@ -8,6 +8,10 @@ on:
         type: string
         default: example.txt
         required: true
+      pathtooutput:
+        type: string
+        default: example.txt
+        required: true
       artifactversion:
         type: string
         default: 1.0.0
@@ -30,12 +34,19 @@ jobs:
         uses: docker://curlimages/curl:latest
         shell: sh
         run: echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
+      - name: create and zip file
+        id: step31
+        uses: docker://crazymax/7zip:latest
+        shell: sh
+        run: |
+          7z a ${{inputs.pathtooutput}} ${{inputs.pathtobinary}}
+          ls ${{inputs.pathtooutput}}
       - name: Upload to Nexus
         id: step4
         uses: docker://curlimages/curl:latest
         shell: sh
         run: |
-          curl -v -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file ${{inputs.pathtobinary}} $NEXUS_REPO
+          curl -v -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file ${{inputs.pathtooutput}} $NEXUS_REPO
       - name: List artifacts in repo
         id: step5
         uses: docker://curlimages/curl:latest
@@ -48,12 +59,12 @@ jobs:
         uses: docker://ganeshpl/alpine-jq
         shell: sh
         run: |
-          echo -n "$(echo "$NEXUS_PASSWORD" | curl -s -u "$NEXUS_USERNAME" 'https://nexus.cloudbees.guru:8081/service/rest/v1/assets?repository=unify-docker-training' | jq -r '.items[] | select(.path == "${{inputs.pathtobinary}}") | .checksum.md5')" > $CLOUDBEES_OUTPUTS/digest
+          echo -n "$(echo "$NEXUS_PASSWORD" | curl -s -u "$NEXUS_USERNAME" 'https://nexus.cloudbees.guru:8081/service/rest/v1/assets?repository=unify-docker-training' | jq -r '.items[] | select(.path == "${{inputs.pathtooutput}}") | .checksum.md5')" > $CLOUDBEES_OUTPUTS/digest
       - name: Register built artifact
         id: step7
         uses: cloudbees-io/register-build-artifact@v1
         with:
           version: ${{inputs.artifactversion}}
-          url: ${{vars.nexus_training_actions_repo}}${{inputs.pathtobinary}}
+          url: ${{vars.nexus_training_actions_repo}}${{inputs.pathtooutput}}
           digest: ${{steps.step6.outputs.digest}}
-          name: ${{inputs.pathtobinary}}
+          name: ${{inputs.pathtooutput}}
