@@ -2,11 +2,11 @@ apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: My workflow
 inputs:
-      pathtobinary:  
-      description: 'Path to binary'
-      required: true
+  pathtobinary:  
+  description: 'Path to binary'
+  required: true
 outputs:
-      jenkins_output: ${{inputs.pathtobinary}}
+  jenkins_output: ${{inputs.pathtobinary}}
 
 on:
   push:
