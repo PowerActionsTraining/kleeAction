@@ -58,5 +58,3 @@ runs:
           url: ${{vars.nexus_training_actions_repo}}${{inputs.pathtobinary}}
           digest: ${{steps.step6.outputs.digest}}
           name: ${{inputs.pathtobinary}}
-          digest: ${{steps.step6.outputs.digest}}
-          name: ${{inputs.pathtooutput}}
