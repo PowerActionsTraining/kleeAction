@@ -21,8 +21,4 @@ jobs:
         uses: docker://curlimages/curl:latest
         shell: sh
         run: echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
-      - name: Print file
-        id: step3
-        uses: docker://curlimages/curl:latest
-        shell: sh
-        run: echo ${{outputs.jenkins_output}}
+
