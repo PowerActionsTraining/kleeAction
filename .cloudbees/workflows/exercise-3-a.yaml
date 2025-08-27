@@ -1,0 +1,34 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: Exercise 3 A
+on:
+  workflow_dispatch:
+    inputs:
+      pathtobinary:
+        type: string
+        default: example.txt
+        required: true
+      pathtooutput:
+        type: string
+        default: example.7z
+        required: true
+      artifactversion:
+        type: string
+        default: 1.0.0
+        required: true
+jobs:
+  create_upload_register_binary:
+    env:
+      NEXUS_USERNAME: ${{vars.nexus_training_actions_user}}
+      NEXUS_PASSWORD: ${{secrets.nexus_training_actions_secret}}
+      NEXUS_REPO: ${{vars.nexus_training_actions_repo}}
+    steps:
+      - name: Create Upload and Register binary
+        uses: PowerActionsTraining/kleeAction@main
+        with:
+          pathtobinary: ${{inputs.pathtobinary}}
+          pathtooutput: ${{inputs.pathtooutput}}
+          artifactversion: ${{inputs.artifactversion}}
+          username: ${{vars.nexus_training_actions_user}}
+          password: ${{secrets.nexus_training_actions_secret}}
+          repo: ${{vars.nexus_training_actions_repo}}
