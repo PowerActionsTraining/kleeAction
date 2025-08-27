@@ -15,7 +15,9 @@ on:
 jobs:
   build:
     outputs:
-      outfile: ${{inputs.pathtobinary}}
+      outfile:
+        type: string
+        default: example2.txt
 
     steps:
       - name: Create file
@@ -25,5 +27,6 @@ jobs:
         run: |
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
           echo ${{inputs.pathtobinary}} 
+          cp ${{inputs.pathtobinary}} ${{outputs.outfile}}
           echo ${{outputs.outfile}}
 
