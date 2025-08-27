@@ -20,4 +20,5 @@ jobs:
         shell: sh
         run: |
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
-          echo ${{inputs.pathtobinary}} > ${{inputs.jenkins_output}}
+          echo "This is an example file - $(date)" > ${{outputs.jenkins_output}}
+
