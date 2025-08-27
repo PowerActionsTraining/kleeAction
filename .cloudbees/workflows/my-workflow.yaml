@@ -1,6 +1,11 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: My workflow
+on:
+  push:
+    branches:
+      - '**'
+
 inputs:
   pathtobinary:  
   description: 'Path to binary'
@@ -8,11 +13,6 @@ inputs:
 outputs:
   jenkins_output:
     
-on:
-  push:
-    branches:
-      - '**'
-
 jobs:
   Run_Main_Job:
     steps:
