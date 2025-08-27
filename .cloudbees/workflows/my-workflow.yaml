@@ -14,9 +14,6 @@ on:
         required: true
 jobs:
   build:
-    outputs:
-      outfile: ${{inputs.pathtobinary}}
-
     steps:
       - name: Create file
         id: step1
@@ -26,10 +23,35 @@ jobs:
           echo "This is an example file - $(date)" > ${{inputs.pathtobinary}}
           echo ${{inputs.pathtobinary}} 
           cat ${{inputs.pathtobinary}}
-      - name: Print file
-        id: step2
-        uses: docker://curlimages/curl:latest
-        shell: sh
+
+  Jenkins-Output-Job:
+    outputs:
+      jenkins_output: ${{ steps.my-output-job.outputs.jenkins_output }}
+    steps:
+      - id: my-output-job
+        name: Run Jenkins job with output
+        uses: https://github.com/cloudbees-io/jenkins-run-job@v2
+        with:
+          url: ${{ vars.JENKINS_URL }}
+          username: ${{ secrets.JENKINS_USERNAME }}
+          token: ${{ secrets.JENKINS_TOKEN }}
+          job-name: jenkins_job_with_output_name
+
+      - id: expose-output
+        name: Expose Jenkins job output
+        uses: docker://exozet/jq:1.6-r0
+        if: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).TESTVAR != '19' }}
         run: |
-          cat ${{outputs.outfile}}
+          echo "BUILD_NUMBER: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).BUILD_NUMBER }}"
+          echo "TESTVAR: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status }}"
+
+  Print-Jenkins-Outputs:
+    if: ${{ fromJSON(needs.Jenkins-Output-Job.outputs.jenkins_output).status == 'success' }}
+    needs: [Jenkins-Output-Job]
+    steps:
+      - id: print-jenkins-output
+        uses: docker://exozet/jq:1.6-r0
+        name: Print Jenkins-Output-Job outputs
+        run: |
+          echo "BUILD_NUMBER: ${{ fromJSON(needs.Jenkins-Output-Job.outputs.jenkins_output).BUILD_NUMBER }}"
 
