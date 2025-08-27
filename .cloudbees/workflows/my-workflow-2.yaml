@@ -1,6 +1,6 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
-name: Exercise 2 A
+name: Create Zip Upload Register Artifact
 on:
   workflow_dispatch:
     inputs:
