@@ -41,6 +41,6 @@ jobs:
         name: Expose Jenkins job output
         uses: docker://exozet/jq:1.6-r0
         run: |
-          echo "Status: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status }}"
+          echo "Status: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).result }}"
 
 
