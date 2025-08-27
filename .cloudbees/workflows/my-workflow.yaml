@@ -41,6 +41,6 @@ jobs:
         name: Expose Jenkins job output
         uses: docker://exozet/jq:1.6-r0
         run: |
-          curl -s https://sda.preview.cb-demos.io/westest/job/WesTestJob2/lastBuild/api/json
+          echo "Status: ${{ fromJSON(steps.my-output-job.outputs.jenkins_output).status }}"
 
 
